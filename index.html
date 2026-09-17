@@ -196,6 +196,13 @@
   .btn-off{background:var(--surface-2);color:var(--text);border-color:var(--border)}
   button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
+  .btn-refresh{
+    width:100%;
+    background:none;
+    color:var(--cool);
+    border:1px solid var(--border);
+  }
+
   .foot{
     font-size:12px;
     color:var(--text-dim);
@@ -256,6 +263,8 @@
   </div>
 </div>
 
+<button class="btn-refresh" id="btnRefresh">🔄 Оновити дані</button>
+
 <div class="notice" id="notice"></div>
 
 <div class="foot">Дію буде надіслано в чат із ботом і виконано на пристроях удома.</div>
@@ -292,6 +301,7 @@
   var notice = document.getElementById('notice');
   var btnOn = document.getElementById('btnOn');
   var btnOff = document.getElementById('btnOff');
+  var btnRefresh = document.getElementById('btnRefresh');
 
   function showNotice(msg){
     notice.textContent = msg;
@@ -307,6 +317,7 @@
     showNotice('Відкрито поза Telegram — кнопки для перегляду, дія не надішлеться.');
     btnOn.disabled = true;
     btnOff.disabled = true;
+    btnRefresh.disabled = true;
   }
 
   function send(action){
@@ -324,6 +335,7 @@
 
   btnOn.addEventListener('click', function(){ send('ac_on'); });
   btnOff.addEventListener('click', function(){ send('ac_off'); });
+  btnRefresh.addEventListener('click', function(){ send('refresh'); });
 })();
 </script>
 </body>
