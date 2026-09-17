@@ -99,7 +99,7 @@
 
   .stat-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(2,1fr);
     gap:10px;
   }
   .stat{
@@ -129,6 +129,8 @@
   .stat .unit{font-size:13px;color:var(--text-dim);font-weight:500}
   .stat.soc .value{color:var(--good)}
   .stat.temp .value{color:var(--cool)}
+  .stat.pv .value{color:var(--accent)}
+  .stat.load .value{color:var(--text)}
 
   .card{
     background:var(--surface);
@@ -225,13 +227,17 @@
     <div class="label">Батарея</div>
     <div class="value" id="socValue">—<span class="unit">%</span></div>
   </div>
+  <div class="stat pv">
+    <div class="label">Генерація</div>
+    <div class="value" id="pvValue">—<span class="unit">Вт</span></div>
+  </div>
+  <div class="stat load">
+    <div class="label">Споживання</div>
+    <div class="value" id="loadValue">—<span class="unit">Вт</span></div>
+  </div>
   <div class="stat temp">
     <div class="label">В кімнаті</div>
     <div class="value" id="tempValue">—<span class="unit">°C</span></div>
-  </div>
-  <div class="stat">
-    <div class="label">Генерація</div>
-    <div class="value" id="pvValue">—<span class="unit">Вт</span></div>
   </div>
 </div>
 
@@ -260,6 +266,7 @@
   var soc = params.get('soc');
   var temp = params.get('temp');
   var pv = params.get('pv');
+  var load = params.get('load');
   var acOn = params.get('ac');
   var setTemp = params.get('settemp');
   var asOf = params.get('t');
@@ -267,6 +274,7 @@
   document.getElementById('socValue').innerHTML = (soc !== null ? soc : '—') + '<span class="unit">%</span>';
   document.getElementById('tempValue').innerHTML = (temp !== null ? temp : '—') + '<span class="unit">°C</span>';
   document.getElementById('pvValue').innerHTML = (pv !== null ? pv : '—') + '<span class="unit">Вт</span>';
+  document.getElementById('loadValue').innerHTML = (load !== null ? load : '—') + '<span class="unit">Вт</span>';
   document.getElementById('acSetTemp').textContent = (setTemp !== null ? setTemp : '—') + '°C';
 
   var pill = document.getElementById('acPill');
