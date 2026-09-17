@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сонячний пульт</title>
+<style>
+  :root{
+    --bg:#F6F3EC;
+    --surface:#FFFFFF;
+    --surface-2:#EFEAE0;
+    --border:#DED6C4;
+    --text:#221C12;
+    --text-dim:#6B6152;
+    --accent:#D98A2B;
+    --accent-ink:#5A3A0F;
+    --cool:#2E8A93;
+    --cool-ink:#0F3B3F;
+    --good:#3E8E52;
+    --good-bg:#E3EFE3;
+    --warn:#B44A2E;
+    --warn-bg:#F3E2DA;
+    --shadow: 0 1px 2px rgba(34,28,18,.06), 0 6px 20px rgba(34,28,18,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15130F;
+      --surface:#1E1B15;
+      --surface-2:#26221B;
+      --border:#373126;
+      --text:#F1ECE1;
+      --text-dim:#A9A092;
+      --accent:#E8A33D;
+      --accent-ink:#2A1B06;
+      --cool:#5FC2CB;
+      --cool-ink:#08262A;
+      --good:#5FB876;
+      --good-bg:#1C2B1E;
+      --warn:#E2795A;
+      --warn-bg:#2E1D17;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15130F;
+    --surface:#1E1B15;
+    --surface-2:#26221B;
+    --border:#373126;
+    --text:#F1ECE1;
+    --text-dim:#A9A092;
+    --accent:#E8A33D;
+    --accent-ink:#2A1B06;
+    --cool:#5FC2CB;
+    --cool-ink:#08262A;
+    --good:#5FB876;
+    --good-bg:#1C2B1E;
+    --warn:#E2795A;
+    --warn-bg:#2E1D17;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI',system-ui,sans-serif;
+    padding-inline:18px;
+    padding-block:calc(20px + env(safe-area-inset-top,0px)) calc(28px + env(safe-area-inset-bottom,0px));
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    max-width:480px;
+    margin-inline:auto;
+  }
+  h1{text-wrap:balance}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    font-weight:700;
+  }
+  .title{
+    font-size:22px;
+    font-weight:800;
+    margin:2px 0 0;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .title small{
+    font-size:12px;
+    font-weight:600;
+    color:var(--text-dim);
+  }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .stat{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:12px 10px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .stat .label{
+    font-size:10.5px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    font-weight:700;
+  }
+  .stat .value{
+    font-family:ui-monospace,Consolas,monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:22px;
+    font-weight:600;
+    line-height:1.1;
+  }
+  .stat .unit{font-size:13px;color:var(--text-dim);font-weight:500}
+  .stat.soc .value{color:var(--good)}
+  .stat.temp .value{color:var(--cool)}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .card-head h2{
+    font-size:15px;
+    margin:0;
+    font-weight:750;
+  }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+  }
+  .pill.on{background:var(--good-bg);color:var(--good)}
+  .pill.off{background:var(--surface-2);color:var(--text-dim)}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+  .ac-detail{
+    display:flex;
+    gap:16px;
+    font-size:13px;
+    color:var(--text-dim);
+  }
+  .ac-detail b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+
+  .btn-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  button{
+    font-family:inherit;
+    font-size:15px;
+    font-weight:750;
+    border-radius:14px;
+    padding:13px 10px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .08s ease, filter .15s ease;
+  }
+  button:active{transform:scale(.97)}
+  button:focus-visible{outline:2px solid var(--cool);outline-offset:2px}
+
+  .btn-on{background:var(--accent);color:var(--accent-ink)}
+  .btn-off{background:var(--surface-2);color:var(--text);border-color:var(--border)}
+  button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+  .foot{
+    font-size:12px;
+    color:var(--text-dim);
+    text-align:center;
+    padding-top:2px;
+  }
+  .foot b{color:var(--text)}
+
+  .notice{
+    background:var(--warn-bg);
+    color:var(--warn);
+    border-radius:12px;
+    padding:10px 14px;
+    font-size:13px;
+    font-weight:600;
+    display:none;
+  }
+  .notice.show{display:block}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+<div class="eyebrow" id="asOf">Дані станом на —</div>
+<div class="title">☀️ Сонячний пульт<small>Deye · Cooper&amp;Hunter</small></div>
+
+<div class="stat-grid">
+  <div class="stat soc">
+    <div class="label">Батарея</div>
+    <div class="value" id="socValue">—<span class="unit">%</span></div>
+  </div>
+  <div class="stat temp">
+    <div class="label">В кімнаті</div>
+    <div class="value" id="tempValue">—<span class="unit">°C</span></div>
+  </div>
+  <div class="stat">
+    <div class="label">PV зараз</div>
+    <div class="value" id="pvValue">—<span class="unit">Вт</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h2>Кондиціонер</h2>
+    <span class="pill off" id="acPill"><span class="dot"></span><span id="acPillText">невідомо</span></span>
+  </div>
+  <div class="ac-detail">
+    <span>Ціль: <b id="acSetTemp">—°C</b></span>
+    <span>Режим: <b id="acMode">обігрів</b></span>
+  </div>
+  <div class="btn-row">
+    <button class="btn-on" id="btnOn">🟢 Увімкнути</button>
+    <button class="btn-off" id="btnOff">🔴 Вимкнути</button>
+  </div>
+</div>
+
+<div class="notice" id="notice"></div>
+
+<div class="foot">Дію буде надіслано в чат із ботом і виконано на пристроях удома.</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var soc = params.get('soc');
+  var temp = params.get('temp');
+  var pv = params.get('pv');
+  var acOn = params.get('ac');
+  var setTemp = params.get('settemp');
+  var asOf = params.get('t');
+
+  document.getElementById('socValue').innerHTML = (soc !== null ? soc : '—') + '<span class="unit">%</span>';
+  document.getElementById('tempValue').innerHTML = (temp !== null ? temp : '—') + '<span class="unit">°C</span>';
+  document.getElementById('pvValue').innerHTML = (pv !== null ? pv : '—') + '<span class="unit">Вт</span>';
+  document.getElementById('acSetTemp').textContent = (setTemp !== null ? setTemp : '—') + '°C';
+
+  var pill = document.getElementById('acPill');
+  var pillText = document.getElementById('acPillText');
+  if(acOn === '1'){
+    pill.classList.add('on'); pill.classList.remove('off');
+    pillText.textContent = 'увімкнено';
+  } else if(acOn === '0'){
+    pillText.textContent = 'вимкнено';
+  }
+
+  document.getElementById('asOf').textContent = 'Дані станом на ' + (asOf || '—');
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var notice = document.getElementById('notice');
+  var btnOn = document.getElementById('btnOn');
+  var btnOff = document.getElementById('btnOff');
+
+  function showNotice(msg){
+    notice.textContent = msg;
+    notice.classList.add('show');
+  }
+
+  if(tg){
+    try{
+      tg.ready();
+      tg.expand();
+    }catch(e){}
+  } else {
+    showNotice('Відкрито поза Telegram — кнопки для перегляду, дія не надішлеться.');
+    btnOn.disabled = true;
+    btnOff.disabled = true;
+  }
+
+  function send(action){
+    if(!tg || typeof tg.sendData !== 'function'){
+      showNotice('Не вдалось надіслати команду (немає зв’язку з Telegram).');
+      return;
+    }
+    try{
+      tg.sendData(JSON.stringify({action: action}));
+      tg.close();
+    }catch(e){
+      showNotice('Помилка надсилання: ' + e.message);
+    }
+  }
+
+  btnOn.addEventListener('click', function(){ send('ac_on'); });
+  btnOff.addEventListener('click', function(){ send('ac_off'); });
+})();
+</script>
+</body>
+</html>
